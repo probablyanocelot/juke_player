@@ -1,0 +1,6 @@
+pafy
+vlc
+json
+pandas
+keyboard
+tabulate
