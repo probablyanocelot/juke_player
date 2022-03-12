@@ -1,6 +1,7 @@
 pafy
-vlc
-json
+python-vlc
+youtube-dl
 pandas
 keyboard
 tabulate
+requests
