@@ -25,33 +25,16 @@ def filter_data(data, criteria=None):
     counter = 0
     for item in data:
         if criteria in item['url']:
-            # if not 'shorts' in item['url'] and not 'playlist' in item['url']: for discord bot only maybe?
-            mydict[counter] = {
-                'title': item['title'],
-                'url': item['url'],
-            }
-            counter += 1
+            if not 'shorts' in item['url'] and not 'playlist' in item['url']:
+                mydict[counter] = {
+                    'title': item['title'],
+                    'url': item['url'],
+                }
+                counter += 1
     return json.dumps(mydict, indent=4)
 
-    # NEED TO MAKE LAYER ABOVE THIS FOR MULTIPLE KEYS
-    # def filter(data, key, criteria=None):
-    #     mydict = dict()
-    #     '''
-    #         mydict = item[key]s if item[key] contains criteria
-    #     '''
-    #     if type(criteria) is list:
-    #         mydict = {i: {key: item[key] for item in data if any(
-    #             c in item[key] for c in criteria) for i in range(0, len([item[key] for item in data if any(c in item[key] for c in criteria)]))}}
-    #     elif type(criteria) is str:
-    #         for i in range(0, len([item[key] for item in data if criteria in item[key]])):
-    #             mylist = [item[key] for item in data if criteria in item[key]]
-    #             mydict[i] = {key: mylist[i]}
-    #         # mydict = {i: {key: item[key] for item in data if criteria in item[key]}
-    #         #            for i in range(0, len([item[key] for item in data if criteria in item[key]]))}
-    #     elif type(criteria) is None:
-    #         mydict = {i: {item[key] for item in data}
-    #                   for i in range(0, len([item[key] for item in data]))}
-    #     return mydict
 
-    # def filter_urls(data, criteria=None):
-    #     return filter(data, 'url', criteria=criteria)
+def get_yt_subs(subreddit):
+    posts = post_data(subreddit, 50)
+    yt_posts = filter_data(posts, 'youtu')
+    return yt_posts

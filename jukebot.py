@@ -64,7 +64,9 @@ def song_to_playlist(Instance, playlist, url):
     playlist.add_media(Media)
 
 
-def main(library, count):
+def main(json_data, count=0):
+
+    library = get_library(json_data)
 
     # player objects
     Instance = vlc.Instance()  # "prefer-insecure"
@@ -112,7 +114,5 @@ def main(library, count):
 
 
 if __name__ == '__main__':
-    edm_posts = getreddit.post_data('edm', 50)
-    edm_yt = getreddit.filter_data(edm_posts, 'youtu')
-    edm_library = get_library(edm_yt)
-    main(edm_library, 0)
+    edm_yt = getreddit.get_yt_subs('edm')
+    main(edm_yt)
