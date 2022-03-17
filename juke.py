@@ -7,8 +7,6 @@ parser = argparse.ArgumentParser(
     prog='juke', usage='%(prog)s [options] source', description='Play audio from links')
 parser.add_argument(
     '-r', '--reddit', help='Play list of most recent YT submissions from reddit', required=False)
-# parser.add_argument(
-#     '-b', '--bar', help='Description for bar argument', required=True)
 args = vars(parser.parse_args())
 
 if args['reddit']:

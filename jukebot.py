@@ -103,16 +103,29 @@ def main(json_data, count=0):
     print(len(playlist))
     print(library)
     media_player.set_media_list(playlist)
-    keyboard.add_hotkey(r'ctrl + alt + b', lambda: media_player.previous())
-    keyboard.add_hotkey(r'ctrl + alt + n', lambda: media_player.next())
-    keyboard.add_hotkey(r'ctrl + alt + space', lambda: media_player.pause())
+    keyboard.add_hotkey(r'ctrl + alt + 8', lambda: media_player.previous())
+    keyboard.add_hotkey(r'ctrl + alt + 0', lambda: media_player.next())
+    keyboard.add_hotkey(r'ctrl + alt + 9', lambda: media_player.pause())
     media_player.play()
     print('after play')
     # media_player.play_item_at_index(0)
     print('after play_item_at_index')
     keyboard.wait(r'ctrl + alt + q')
+    media_player.stop()
+    player_interface()
+
+
+def player_interface():
+    user_in = input('Enter subreddit: ')
+
+    sub_yt_links = getreddit.get_yt_subs(user_in)
+    main(sub_yt_links)
+    # except:
+    #     print(
+    #         'Something went wrong.\n It is likely that the input is not a valid subreddit.')
+    # else:
+    #     player_interface()
 
 
 if __name__ == '__main__':
-    edm_yt = getreddit.get_yt_subs('edm')
-    main(edm_yt)
+    player_interface()
