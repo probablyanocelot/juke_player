@@ -13,8 +13,8 @@ connection = pika.BlockingConnection(params)
 channel = connection.channel()
 
 
-def publish(method, body):
+def publish(method, body, service='player'):
     properties = pika.BasicProperties(method)
     channel.basic_publish(
-        exchange='', routing_key='player', body=json.dumps(body), properties=properties)
+        exchange='', routing_key=service, body=json.dumps(body), properties=properties)
     # print(" [x] Sent %r" % body)

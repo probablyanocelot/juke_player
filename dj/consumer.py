@@ -35,13 +35,18 @@ def callback(ch, method, properties, body):
 
         if cmd == 'r':
             print('Reddit')
-            print(cmd)
-            print(query.user_in)
-            print(terms)
             req = requests.get(
                 'http://backend:5000/api/query/{}/{}'.format(cmd, terms), verify=False)
             # print(' '.join(query.user_in.split(' ')[1:]))  # USE FOR YOUTUBE!!!
 
+    elif properties.content_type == 'song':
+        song = Song(id=data['id'], title=data['title'], url=data['url'])
+        db.session.add(song)
+        db.session.commit()
+        print("Song Created")
+
+    # elif properties.content_type == 'yt_playlist':
+        # playlist = Playlist(id=data['id'], user_in=data['user_in'])
         # db.session.add(song)
         # db.session.commit()
         # print('Song Created')

@@ -16,9 +16,13 @@ db = SQLAlchemy(app)
 
 @dataclass
 class Song(db.Model):
+    __tablename__ = 'songs'
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     title = db.Column(db.String(200))
     url = db.Column(db.String(200))
+
+    def serialize(self):
+        return {'id': self.id, 'title': self.title, 'url': self.url}
 
 
 @dataclass

@@ -25,11 +25,13 @@ def callback(ch, method, properties, body):
     data = json.loads(body)
     print(data)
 
-    # if properties.content_type == 'query':
-    #     query = Query(id=data['id'], user_in=data['user_in'])
-    #     # db.session.add(song)
-    #     # db.session.commit()
-    #     print(query.user_in)
+    if properties.content_type == 'song':
+        song = Song(id=data['id'], title=data['title'], url=data['url'])
+        db.session.add(song)
+        db.session.commit()
+        print('Song Added')
+        requests.get(
+            'http://backend:5000/api/query/song_added/{}'.format(song.id))
 
     # elif properties.content_type == 'song_updated':
     #     song = Song.query.get(data['id'])

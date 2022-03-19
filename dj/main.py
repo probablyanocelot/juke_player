@@ -1,6 +1,7 @@
 import os
 import requests
 import getreddit
+import json
 from dataclasses import dataclass
 from producer import publish
 
@@ -18,9 +19,18 @@ db = SQLAlchemy(app)
 
 @dataclass
 class Song(db.Model):
+    __tablename__ = 'song'
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     title = db.Column(db.String(200))
     url = db.Column(db.String(200))
+
+    def serialize(self):
+        return {'id': self.id, 'title': self.title, 'url': self.url}
+
+
+# @dataclass
+# class Playlist(Song):
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
 
 
 @dataclass
@@ -38,11 +48,31 @@ def index():
     return jsonify(Song.query.all())
 
 
-@app.route('/api/query/r/<string:terms>')
-def router(terms):
-    print(f"user in {terms}")
-    dirty_terms = getreddit.get_yt_subs(terms)
-    return dirty_terms
+@app.route('/api/query/<string:cmd>/<string:terms>')
+def make_playlist(cmd, terms):
+    if cmd == 'r':
+        print(f"user in {terms}")
+        dirty_terms = json.loads(getreddit.get_yt_subs(terms))
+        print(dirty_terms)
+        for item in dirty_terms:
+            track = dirty_terms[item]
+            print(track)
+            song = Song(id=track['id'], title=track['title'], url=track['url'])
+            print(song.id)
+            db.session.add(song)
+            db.session.commit()
+
+            # requests.get(
+            #     'http://localhost:5000/api/songs/{}/add'.format(song.id))
+        return dirty_terms
+
+
+@app.route('/api/songs/<int:id>/add')
+def add_song(id, song):
+    db.session.add(song)
+    db.session.commit()
+    publish('song', song.serialize())
+    print('Song Added!')
 
 # @app.route('/api/query/<string:user_in>')
 # def query(user_in):

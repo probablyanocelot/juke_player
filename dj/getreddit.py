@@ -27,6 +27,7 @@ def filter_data(data, criteria=None):
         if criteria in item['url']:
             if not 'shorts' in item['url'] and not 'playlist' in item['url']:
                 mydict[counter] = {
+                    'id': counter,
                     'title': item['title'],
                     'url': item['url'],
                 }
