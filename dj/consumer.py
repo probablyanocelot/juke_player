@@ -27,12 +27,19 @@ def callback(ch, method, properties, body):
     print(data)
 
     if properties.content_type == 'query':  # properties.content_type == 'query':
-        query = Query(user_in=data['user_in'])
+        query = Query(id=data['id'], user_in=data['user_in'])
         print(query.user_in)
-        if query.user_in.split(' ')[0] == 'r':
+        cmd = query.user_in.split(' ')[0]
+        terms = ' '.join(query.user_in.split(' ')[1:])
+
+        if cmd == 'r':
             print('Reddit')
+            print(cmd)
             print(query.user_in)
-            print(' '.join(query.user_in.split(' ')[1:]))  # USE FOR YOUTUBE!!!
+            print(terms)
+            req = requests.get(
+                'http://localhost:5000/api/songs/{}/{}'.format(cmd, terms))
+            # print(' '.join(query.user_in.split(' ')[1:]))  # USE FOR YOUTUBE!!!
 
         # db.session.add(song)
         # db.session.commit()

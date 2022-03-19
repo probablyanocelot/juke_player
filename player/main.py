@@ -27,7 +27,7 @@ class Query(db.Model):
     user_in = db.Column(db.String(200))
 
     def serialize(self):
-        return {"user_in": self.user_in}
+        return {'id': self.id, "user_in": self.user_in}
 
 
 @app.route('/api/songs')

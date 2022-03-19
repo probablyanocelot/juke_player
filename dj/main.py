@@ -23,10 +23,12 @@ class Song(db.Model):
 
 @dataclass
 class Query(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     user_in = db.Column(db.String(200))
 
     def serialize(self):
-        return {"user_in": self.user_in}
+        # 'user_in': self.user_in
+        return {'id': self.id, 'user_in': self.user_in}
 
 
 @app.route('/api/songs')
@@ -34,7 +36,7 @@ def index():
     return jsonify(Song.query.all())
 
 
-@app.route('/api/query/r/<string:user_in>')
+@app.route('/api/query/r/<string:terms>')
 def router():
     print(f"{user_in}")
 
