@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from producer import publish
 
@@ -7,34 +8,46 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://test:test@db/tutorial-flask'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://test:test@db/dj'
 CORS(app)
 
 db = SQLAlchemy(app)
 
 
 @dataclass
-class Product(db.Model):
+class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     title = db.Column(db.String(200))
-    image = db.Column(db.String(200))
+    url = db.Column(db.String(200))
 
 
 @dataclass
-class ProductUser(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    product_id = db.Column(db.Integer)
+class Query(db.Model):
+    user_in = db.Column(db.String(200))
 
-    UniqueConstraint('user_id', 'product_id', name='user_product_unique')
+    def serialize(self):
+        return {"user_in": self.user_in}
 
 
-@app.route('/api/products')
+@app.route('/api/songs')
 def index():
-    return jsonify(Product.query.all())
+    return jsonify(Song.query.all())
 
 
-@app.route('/api/products/<int:id>/like')
+@app.route('/api/query/r/<string:user_in>')
+def router():
+    print(f"{user_in}")
+
+# @app.route('/api/query/<string:user_in>')
+# def query(user_in):
+#     query = Query(user_in=user_in)
+#     db.session.add(query)
+#     db.session.commit()
+#     publish('query', query)
+#     return jsonify(query)
+
+
+@app.route('/api/songs/<int:id>/like')
 def like(id):
     req = requests.get('http://docker.for.mac.localhost:8000/api/user')
     json = req.json()

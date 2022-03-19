@@ -26,7 +26,7 @@ services:
     environment:
       POSTGRES_PASSWORD: 'test'
       POSTGRES_USER: 'test'
-      POSTGRES_DB: jukesy-flask
+      POSTGRES_DB: player
 
     volumes:
       - .dbdata:/var/lib/postgres/data\

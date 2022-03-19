@@ -14,27 +14,18 @@ db = SQLAlchemy(app)
 
 
 @dataclass
-class Product(db.Model):
+class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     title = db.Column(db.String(200))
-    image = db.Column(db.String(200))
+    url = db.Column(db.String(200))
 
 
-@dataclass
-class ProductUser(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    product_id = db.Column(db.Integer)
-
-    UniqueConstraint('user_id', 'product_id', name='user_product_unique')
-
-
-@app.route('/api/products')
+@ app.route('/api/songs')
 def index():
-    return jsonify(Product.query.all())
+    return jsonify(Song.query.all())
 
 
-@app.route('/api/products/<int:id>/like')
+@app.route('/api/songs/<int:id>/like')
 def like(id):
     req = requests.get('http://docker.for.mac.localhost:8000/api/user')
     json = req.json()
