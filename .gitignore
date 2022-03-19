@@ -5,3 +5,7 @@ __pycache__/jukebot.cpython-39.pyc
 __pycache__/jukebot.cpython-310.pyc
 microservices-flask
 microservices-backend
+dj/__pycache__/producer.cpython-39.pyc
+dj/__pycache__/getreddit.cpython-39.pyc
+player/.env
+dj/.env

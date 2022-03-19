@@ -2,6 +2,7 @@ import pika
 # from dotenv import load_dotenv
 import os
 import json
+import requests
 from main import Query, db
 from dotenv import load_dotenv
 load_dotenv('.env')
@@ -38,7 +39,7 @@ def callback(ch, method, properties, body):
             print(query.user_in)
             print(terms)
             req = requests.get(
-                'http://localhost:5000/api/songs/{}/{}'.format(cmd, terms))
+                'http://backend:5000/api/query/{}/{}'.format(cmd, terms), verify=False)
             # print(' '.join(query.user_in.split(' ')[1:]))  # USE FOR YOUTUBE!!!
 
         # db.session.add(song)

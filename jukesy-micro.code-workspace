@@ -5,6 +5,9 @@
         },
         {
             "path": "..\\.plib\\python-microservices"
+        },
+        {
+            "path": "..\\..\\Code_Projects\\disco-bot\\msvcs"
         }
     ]
 }

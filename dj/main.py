@@ -1,4 +1,6 @@
 import os
+import requests
+import getreddit
 from dataclasses import dataclass
 from producer import publish
 
@@ -37,8 +39,10 @@ def index():
 
 
 @app.route('/api/query/r/<string:terms>')
-def router():
-    print(f"{user_in}")
+def router(terms):
+    print(f"user in {terms}")
+    dirty_terms = getreddit.get_yt_subs(terms)
+    return dirty_terms
 
 # @app.route('/api/query/<string:user_in>')
 # def query(user_in):
@@ -70,4 +74,4 @@ def like(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=5000)
