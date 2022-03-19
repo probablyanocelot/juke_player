@@ -1,7 +1,0 @@
-Django==4.0.1
-psycopg2
-djangorestframework
-django-postgresql
-django-cors-headers
-pika==1.1.0
-python-dotenv
