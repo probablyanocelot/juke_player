@@ -1,7 +1,7 @@
 import pika
 import os
 import json
-from main import Query, db
+from app import Song, Query, db
 from dotenv import load_dotenv
 load_dotenv('.env')
 

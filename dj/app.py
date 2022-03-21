@@ -9,20 +9,32 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
+from flask_migrate import Migrate, MigrateCommand
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://test:test@db/dj'
+app.debug = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test:test@db:5432/dj'
+app.config['SQLALCHEMY_ECHO'] = True
+
 CORS(app)
 
 db = SQLAlchemy(app)
 
+db.drop_all()
+db.create_all()
+migrate = Migrate(app, db)
+
 
 @dataclass
 class Song(db.Model):
-    __tablename__ = 'song'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    title = db.Column(db.String(200))
+    __tablename__ = 'songs'
+    # __table_args__ = {''}
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(1000))
     url = db.Column(db.String(200))
+
+    # UniqueConstraint('id', 'url', name='id_url_unique')
 
     def serialize(self):
         return {'id': self.id, 'title': self.title, 'url': self.url}
@@ -48,23 +60,15 @@ def index():
     return jsonify(Song.query.all())
 
 
-@app.route('/api/query/<string:cmd>/<string:terms>')
+@app.route('/api/<string:cmd>/<string:terms>')
 def make_playlist(cmd, terms):
     if cmd == 'r':
-        print(f"user in {terms}")
+        # print(f"user in {terms}")
         dirty_terms = json.loads(getreddit.get_yt_subs(terms))
-        print(dirty_terms)
-        for item in dirty_terms:
-            track = dirty_terms[item]
-            print(track)
-            song = Song(id=track['id'], title=track['title'], url=track['url'])
-            print(song.id)
-            db.session.add(song)
-            db.session.commit()
-
-            # requests.get(
-            #     'http://localhost:5000/api/songs/{}/add'.format(song.id))
-        return dirty_terms
+        # publish('song', song.serialize(), service='dj')
+        # requests.get(
+        #     'http://localhost:5000/api/songs/{}/add'.format(song.id))
+        return jsonify(dirty_terms)
 
 
 @app.route('/api/songs/<int:id>/add')

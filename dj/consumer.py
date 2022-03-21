@@ -3,7 +3,7 @@ import pika
 import os
 import json
 import requests
-from main import Query, db
+from app import Song, Query, db
 from dotenv import load_dotenv
 load_dotenv('.env')
 
@@ -36,11 +36,18 @@ def callback(ch, method, properties, body):
         if cmd == 'r':
             print('Reddit')
             req = requests.get(
-                'http://backend:5000/api/query/{}/{}'.format(cmd, terms), verify=False)
+                'http://backend:5000/api/{}/{}'.format(cmd, terms), verify=False).json()
+            for item in req:
+                track = req[item]
+                song = Song(title=track['title'], url=track['url'])
+                # print(vars(song))
+                db.session.add(song)
+                db.session.commit()
+                print("Song Created")
             # print(' '.join(query.user_in.split(' ')[1:]))  # USE FOR YOUTUBE!!!
 
     elif properties.content_type == 'song':
-        song = Song(id=data['id'], title=data['title'], url=data['url'])
+        song = Song(title=data['title'], url=data['url'])
         db.session.add(song)
         db.session.commit()
         print("Song Created")
