@@ -40,12 +40,12 @@ def callback(ch, method, properties, body):
             playlist = requests.get(
                 'http://backend:5000/api/{}/{}'.format(cmd, terms), verify=False).json()
             for entry in playlist:
-                print(entry)
-                track = req[item]
-                print(track)
-                # song_with_name = get_vid_name(YT_API_KEY, track)
-                # song = Song(title=song_with_name['title'], url=track['url'])
-                # print(song.title)
+                # print(entry)
+                track = playlist[entry]
+                # print(track)
+                song_with_name = get_vid_name(YT_API_KEY, track)
+                song = Song(title=song_with_name['title'], url=track['url'])
+                print('This is the SONG!!!{}'.format(song.title))
                 # song.title = get_vid_name(YT_API_KEY, song.url)
 
                 # # print(vars(song))

@@ -71,6 +71,11 @@ def make_playlist(cmd, terms):
         return jsonify(dirty_terms)
 
 
+@app.route('/api/r/<string:terms>/clean')
+def clean_playlist(terms):
+    pass
+
+
 @app.route('/api/songs/<int:id>/add')
 def add_song(id, song):
     db.session.add(song)

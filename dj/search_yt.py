@@ -37,18 +37,15 @@ def name_from_id(api_key, id):
 # HAVE TO USE API TO GET TITLE
 def get_vid_name(api_key, json_data):
     print(json_data)
-    for item in json_data:
+    # print(json_data['url'])
+    # pattern = r"\??v?=?([^#\&\?]*).*/"
+    pattern = '(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
 
-        print(json_data)
-        print(json_data['url'])
-        # pattern = r"\??v?=?([^#\&\?]*).*/"
-        pattern = '(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
+    if re.search(pattern, json_data['url']):
 
-        if re.search(pattern, json_data['url']):
-
-            print('IS YOUTUBE LINK')
-            id = re.search(pattern, json_data['url']).group(1)
-            json_data['title'] = name_from_id(api_key, id)
+        print('IS YOUTUBE LINK')
+        id = re.search(pattern, json_data['url']).group(1)
+        json_data['title'] = name_from_id(api_key, id)
 
     print(json_data)
     return json_data
