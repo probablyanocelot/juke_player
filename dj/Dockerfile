@@ -19,6 +19,10 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
+#  Add dependency files:
+ADD backend_youtube_dl.py /usr/local/lib/python3.10/site-packages/pafy
+# ADD ffmpeg.exe /usr/local/lib
+
 COPY . /app
 
 # Run the application:

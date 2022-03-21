@@ -8,6 +8,9 @@
         },
         {
             "path": "..\\..\\Code_Projects\\disco-bot\\msvcs"
+        },
+        {
+            "path": "..\\disco-bot-mono"
         }
     ]
 }
