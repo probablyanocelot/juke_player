@@ -11,11 +11,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
 from flask_migrate import Migrate, MigrateCommand
 
+from search_yt import yt_query, YT_API_KEY, get_vid_name
+
 
 app = Flask(__name__)
 app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test:test@db:5432/dj'
-app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_ECHO'] = True
 
 CORS(app)
 
@@ -63,17 +66,18 @@ def index():
 @app.route('/api/<string:cmd>/<string:terms>')
 def make_playlist(cmd, terms):
     if cmd == 'r':
-        # print(f"user in {terms}")
         dirty_terms = json.loads(getreddit.get_yt_subs(terms))
-        # publish('song', song.serialize(), service='dj')
-        # requests.get(
-        #     'http://localhost:5000/api/songs/{}/add'.format(song.id))
         return jsonify(dirty_terms)
 
 
-@app.route('/api/r/<string:terms>/clean')
-def clean_playlist(terms):
-    pass
+@app.route('/api/<string:cmd>/<string:terms>/clean')
+def clean_playlist(cmd, terms):
+    if cmd == 'r':
+        res = make_playlist(cmd, terms)
+        playlist = json.loads(res.data)
+        for track in playlist:
+            playlist[track] = get_vid_name(YT_API_KEY, playlist[track])
+        return jsonify(playlist)
 
 
 @app.route('/api/songs/<int:id>/add')
