@@ -43,18 +43,12 @@ class Song(db.Model):
         return {'id': self.id, 'title': self.title, 'url': self.url}
 
 
-# @dataclass
-# class Playlist(Song):
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-
-
 @dataclass
 class Query(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     user_in = db.Column(db.String(200))
 
     def serialize(self):
-        # 'user_in': self.user_in
         return {'id': self.id, 'user_in': self.user_in}
 
 
@@ -86,34 +80,6 @@ def add_song(id, song):
     db.session.commit()
     publish('song', song.serialize())
     print('Song Added!')
-
-# @app.route('/api/query/<string:user_in>')
-# def query(user_in):
-#     query = Query(user_in=user_in)
-#     db.session.add(query)
-#     db.session.commit()
-#     publish('query', query)
-#     return jsonify(query)
-
-
-@app.route('/api/songs/<int:id>/like')
-def like(id):
-    req = requests.get('http://docker.for.mac.localhost:8000/api/user')
-    json = req.json()
-
-    try:
-        productUser = ProductUser(user_id=json['id'], product_id=id)
-        db.session.add(productUser)
-        db.session.commit()
-
-        publish('product_liked', id)
-
-    except:
-        abort(400, "You already liked this product")
-
-    return jsonify({
-        'message': 'success',
-    })
 
 
 if __name__ == '__main__':

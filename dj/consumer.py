@@ -34,7 +34,6 @@ def callback(ch, method, properties, body):
         terms = ' '.join(query.user_in.split(' ')[1:])
 
         if cmd == 'r':
-
             print('Reddit')
             sub_playlist = requests.get(
                 'http://backend:5000/api/{}/{}/clean'.format(cmd, terms), verify=False).json()
@@ -45,21 +44,6 @@ def callback(ch, method, properties, body):
                 db.session.add(song)
                 db.session.commit()
                 print('Song Added!')
-                #     # print(entry)
-                #     req = requests.get(
-                #         'http://backend:5000/api/{}/{}/clean'.format(cmd, terms), verify=False)
-                #     track = playlist[entry]
-                #     # print(track)
-                #     song_with_name = get_vid_name(YT_API_KEY, track)
-                #     song = Song(title=song_with_name['title'], url=track['url'])
-                #     print('This is the SONG!!!{}'.format(song.title))
-                #     # song.title = get_vid_name(YT_API_KEY, song.url)
-
-                # # print(vars(song))
-                # db.session.add(song)
-                # db.session.commit()
-                # print("Song Created")
-                # print(' '.join(query.user_in.split(' ')[1:]))  # USE FOR YOUTUBE!!!
 
     elif properties.content_type == 'song':
         song = Song(title=data['title'], url=data['url'])
