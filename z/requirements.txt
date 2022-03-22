@@ -1,7 +1,0 @@
-pafy
-python-vlc
-youtube-dl
-pandas
-keyboard
-tabulate
-requests

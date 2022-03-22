@@ -60,8 +60,12 @@ def index():
 @app.route('/api/<string:cmd>/<string:terms>')
 def make_playlist(cmd, terms):
     if cmd == 'r':
-        dirty_terms = json.loads(getreddit.get_yt_subs(terms))
-        return jsonify(dirty_terms)
+        try:
+            dirty_terms = json.loads(getreddit.get_yt_subs(terms))
+            return jsonify(dirty_terms)
+        except:
+            print('Error getting reddit subs, probably not found')
+            return
 
 
 @app.route('/api/<string:cmd>/<string:terms>/clean')
