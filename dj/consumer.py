@@ -43,6 +43,7 @@ def callback(ch, method, properties, body):
                 song = Song(title=track['title'], url=track['url'])
                 db.session.add(song)
                 db.session.commit()
+                publish('yt_song', song.serialize())
                 print('Song Added!')
 
     elif properties.content_type == 'song':
