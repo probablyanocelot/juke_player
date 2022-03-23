@@ -23,6 +23,22 @@ async def yt_query(api_key, *terms):
 #     }
 
 
+def url_to_stream(json_data, counter=None):
+
+    try:
+        url = json_data['url'].replace(r'youtu.be', r'youtube.com/v/')
+        url = url.replace(r'watch?v=', '')
+        stream_url = get_bestquality(url).url
+        json_data['url'] = stream_url
+        return json_data
+
+    # may not work; GOAL: if can't get stream: remove from library
+    except ValueError:
+        json_data = json_data.drop(labels=counter, axis=0)
+        json_data = json_data.reset_index(drop=True)
+        return json_data
+
+
 def name_from_id(api_key, id):
     url = requests.get(
         f'https://www.googleapis.com/youtube/v3/videos?part=snippet&id={id}&key={api_key}').json()

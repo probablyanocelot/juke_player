@@ -25,7 +25,7 @@ def callback(ch, method, properties, body):
     data = json.loads(body)
     print(data)
 
-    if properties.content_type == 'song':
+    if properties.content_type == 'song_created':
         song = Song(id=data['id'], title=data['title'], url=data['url'])
         db.session.add(song)
         db.session.commit()
@@ -33,18 +33,18 @@ def callback(ch, method, properties, body):
         requests.get(
             'http://backend:5000/api/query/song_added/{}'.format(song.id))
 
-    # elif properties.content_type == 'song_updated':
-    #     song = Song.query.get(data['id'])
-    #     song.title = data['title']
-    #     song.image = data['url']
-    #     db.session.commit()
-    #     print('Song Updated')
+    elif properties.content_type == 'song_updated':
+        song = Song.query.get(data['id'])
+        song.title = data['title']
+        song.image = data['url']
+        db.session.commit()
+        print('Song Updated')
 
-    # elif properties.content_type == 'song_deleted':
-    #     song = Song.query.get(data)
-    #     db.session.delete(song)
-    #     db.session.commit()
-    #     print('Song Deleted')
+    elif properties.content_type == 'song_deleted':
+        song = Song.query.get(data)
+        db.session.delete(song)
+        db.session.commit()
+        print('Song Deleted')
 
 
 channel.basic_consume(queue='player',
