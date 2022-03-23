@@ -39,11 +39,17 @@ def index():
     return jsonify(Song.query.all())
 
 
-@app.route('/api/query/<string:user_in>')
+@app.route('/api/songs/<int:id>/stream')
+def get_stream_url(id):
+    song = Song.query.get(id)
+    song.url = url_to_stream(song.url)
+    # publish('song_updated', song.serialize())
+    return jsonify(song)
+
+
+@ app.route('/api/query/<string:user_in>')
 def send_query(user_in):
     query = Query(user_in=user_in)
-    # db.session.add(query)
-    # db.session.commit()
     publish('query', query.serialize())
     return jsonify(query)
 

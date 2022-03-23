@@ -65,25 +65,6 @@ def callback(ch, method, properties, body):
         db.session.commit()
         print('Song Deleted')
 
-    # elif properties.content_type == 'yt_playlist':
-        # playlist = Playlist(id=data['id'], user_in=data['user_in'])
-        # db.session.add(song)
-        # db.session.commit()
-        # print('Song Created')
-
-    elif properties.content_type == 'song_updated':
-        song = Song.query.get(data['id'])
-        song.title = data['title']
-        song.image = data['url']
-        db.session.commit()
-        print('Song Updated')
-
-    elif properties.content_type == 'song_deleted':
-        song = Song.query.get(data)
-        db.session.delete(song)
-        db.session.commit()
-        print('Song Deleted')
-
 
 channel.basic_consume(queue='dj',
                       on_message_callback=callback, auto_ack=True)

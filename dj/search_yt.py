@@ -26,16 +26,19 @@ async def yt_query(*terms, api_key=YT_API_KEY):
 def url_to_stream(json_data, counter=None):
 
     try:
+
+        if url.split('&amp;')[0]:
+            url = url.split('&amp;')[0]
         url = json_data['url'].replace(r'youtu.be', r'youtube.com/v/')
-        url = url.replace(r'watch?v=', '')
+        url = url.replace(r'watch?v=', 'v/')
         stream_url = get_bestquality(url).url
         json_data['url'] = stream_url
         return json_data
 
     # may not work; GOAL: if can't get stream: remove from library
     except ValueError:
-        json_data = json_data.drop(labels=counter, axis=0)
-        json_data = json_data.reset_index(drop=True)
+        # json_data = json_data.drop(labels=counter, axis=0)
+        # json_data = json_data.reset_index(drop=True)
         return json_data
 
 

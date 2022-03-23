@@ -78,11 +78,11 @@ def clean_playlist(cmd, terms):
         return jsonify(playlist)
 
 
-@app.route('/api/songs/<int:id>/stream')
-def get_stream(id, song):
-    song = Song.query.get(id)
-    song.url =
-    return jsonify(song.url)
+# @app.route('/api/songs/<int:id>/stream')
+# def get_stream(id, song):
+#     song = Song.query.get(id)
+#     song.url =
+#     return jsonify(song.url)
 
 
 @app.route('/api/songs/<int:id>/add')
