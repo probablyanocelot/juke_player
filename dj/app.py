@@ -11,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
 from flask_migrate import Migrate, MigrateCommand
 
-from search_yt import yt_query, YT_API_KEY, get_vid_name
+from search_yt import yt_query, YT_API_KEY, get_vid_name, url_to_stream
 
 
 app = Flask(__name__)
@@ -76,6 +76,13 @@ def clean_playlist(cmd, terms):
         for track in playlist:
             playlist[track] = get_vid_name(YT_API_KEY, playlist[track])
         return jsonify(playlist)
+
+
+@app.route('/api/songs/<int:id>/stream')
+def get_stream(id, song):
+    song = Song.query.get(id)
+    song.url =
+    return jsonify(song.url)
 
 
 @app.route('/api/songs/<int:id>/add')

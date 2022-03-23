@@ -8,7 +8,7 @@ load_dotenv('.env')
 YT_API_KEY = os.getenv('YT_API_KEY')
 
 
-async def yt_query(api_key, *terms):
+async def yt_query(*terms, api_key=YT_API_KEY):
     ''' GET VIDEO BY BEST MATCH OF QUERY '''
 
     html = urllib.request.urlopen(
@@ -39,7 +39,7 @@ def url_to_stream(json_data, counter=None):
         return json_data
 
 
-def name_from_id(api_key, id):
+def name_from_id(id, api_key=YT_API_KEY):
     url = requests.get(
         f'https://www.googleapis.com/youtube/v3/videos?part=snippet&id={id}&key={api_key}').json()
     # url_json = json.loads(url)
@@ -51,7 +51,7 @@ def name_from_id(api_key, id):
 
 
 # HAVE TO USE API TO GET TITLE
-def get_vid_name(api_key, json_data):
+def get_vid_name(json_data, api_key=YT_API_KEY):
     print(json_data)
     # print(json_data['url'])
     # pattern = r"\??v?=?([^#\&\?]*).*/"
