@@ -2,13 +2,13 @@ import os
 import requests
 import getreddit
 import json
-from dataclasses import dataclass
 from producer import publish
 
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
+from dataclasses import dataclass
 from flask_migrate import Migrate, MigrateCommand
 
 from search_yt import yt_query, YT_API_KEY, get_vid_name, url_to_stream
@@ -16,9 +16,9 @@ from search_yt import yt_query, YT_API_KEY, get_vid_name, url_to_stream
 
 app = Flask(__name__)
 app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test:test@db:5432/dj'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@db:5432/dj'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_ECHO'] = True
 
 CORS(app)
 
@@ -33,11 +33,11 @@ migrate = Migrate(app, db)
 class Song(db.Model):
     __tablename__ = 'songs'
     # __table_args__ = {''}
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(1000))
     url = db.Column(db.String(200))
 
-    # UniqueConstraint('id', 'url', name='id_url_unique')
+    UniqueConstraint('id', 'url', name='id_url_unique')
 
     def serialize(self):
         return {'id': self.id, 'title': self.title, 'url': self.url}
@@ -59,6 +59,7 @@ def index():
 
 @app.route('/api/<string:cmd>/<string:terms>')
 def make_playlist(cmd, terms):
+    print('MAKING PLAYLIST')
     if cmd == 'r':
         try:
             dirty_terms = json.loads(getreddit.get_yt_subs(terms))
@@ -72,25 +73,25 @@ def make_playlist(cmd, terms):
 def clean_playlist(cmd, terms):
     if cmd == 'r':
         res = make_playlist(cmd, terms)
+        print(res)
         playlist = json.loads(res.data)
+        print(playlist)
         for track in playlist:
-            playlist[track] = get_vid_name(YT_API_KEY, playlist[track])
+            print(track)
+            print(playlist[track])
+            playlist[track] = get_vid_name(playlist[track])
+        print(playlist)
         return jsonify(playlist)
 
 
-# @app.route('/api/songs/<int:id>/stream')
-# def get_stream(id, song):
-#     song = Song.query.get(id)
-#     song.url =
-#     return jsonify(song.url)
-
-
-@app.route('/api/songs/<int:id>/add')
-def add_song(id, song):
-    db.session.add(song)
-    db.session.commit()
-    publish('song', song.serialize())
-    print('Song Added!')
+@app.route('/api/<string:cmd>/<string:terms>/playlist')
+def publish_songs(cmd, terms):
+    res = clean_playlist(cmd, terms)
+    playlist = json.loads(res.data)
+    for track in playlist:
+        song = Song(title=playlist[track]['title'], url=playlist[track]['url'])
+        publish('song_created', song.serialize())
+    return jsonify(playlist)
 
 
 if __name__ == '__main__':

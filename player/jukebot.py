@@ -1,16 +1,29 @@
 import vlc
 import requests
-from app import user_input
-from models import Song
+import keyboard
+# from models import Song
 
 
-class Player(Object):
+class Player():
     def __init__(self, json_data):
+
+        keyboard.add_hotkey(r'ctrl + alt + 8',
+                            lambda: self.next_song())
+        keyboard.add_hotkey(r'ctrl + alt + 9',
+                            lambda: self.media_player.pause())
+        keyboard.add_hotkey(r'ctrl + alt + 0', lambda: self.next_song())
+
         self.Instance = vlc.Instance()  # "prefer-insecure"
         self.media_player = vlc.MediaListPlayer()
         self.playlist = self.Instance.media_list_new()
         self.counter = 0
         self.queue_song()
+        self.media_player.play()
+        self.print('after play')
+        # media_player.play_item_at_index(0)
+        self.print('after play_item_at_index')
+        self.keyboard.wait(r'ctrl + alt + q')
+        self.media_player.stop()
 
     def queue_song(self):
         # song = Song.query.get(self.counter)
@@ -27,15 +40,8 @@ class Player(Object):
         queue_song()
         self.media_player.next()
 
-    keyboard.add_hotkey(r'ctrl + alt + 8',
-                        lambda: self.media_player.previous())
-    keyboard.add_hotkey(r'ctrl + alt + 9', lambda: self.media_player.pause())
-    keyboard.add_hotkey(r'ctrl + alt + 0', lambda: next_song())
+    def prev_song():
+        self.counter -= 1
+        self.media_player.previous()
 
-    media_player.play()
-    print('after play')
-    # media_player.play_item_at_index(0)
-    print('after play_item_at_index')
-    keyboard.wait(r'ctrl + alt + q')
-    media_player.stop()
-    user_input()
+    # user_input()

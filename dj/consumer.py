@@ -36,18 +36,18 @@ def callback(ch, method, properties, body):
         if cmd == 'r':
             print('Reddit')
             sub_playlist = requests.get(
-                'http://backend:5000/api/{}/{}/clean'.format(cmd, terms), verify=False).json()
+                'http://backend:5000/api/{}/{}/playlist'.format(cmd, terms), verify=False)  # .json()
 
-            for entry in sub_playlist:
-                track = sub_playlist[entry]
-                song = Song(title=track['title'], url=track['url'])
-                db.session.add(song)
-                db.session.commit()
-                publish('song_created', song.serialize())
-                print('Song Added!')
+            # for entry in sub_playlist:
+            #     track = sub_playlist[entry]
+            #     song = Song(title=track['title'], url=track['url'])
+            #     db.session.add(song)
+            #     db.session.commit()
+            #     publish('song_created', song.serialize())
+            #     print('Song Added!')
 
     elif properties.content_type == 'song_created':
-        song = Song(id=data['id'], title=data['title'], url=data['url'])
+        song = Song(title=data['title'], url=data['url'])
         db.session.add(song)
         db.session.commit()
         print("Song Created")

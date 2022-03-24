@@ -1,7 +1,7 @@
 import pika
 import os
 import json
-from app import Song, Query, db
+from app import db, Song, Query
 from dotenv import load_dotenv
 load_dotenv('.env')
 
@@ -26,7 +26,7 @@ def callback(ch, method, properties, body):
     print(data)
 
     if properties.content_type == 'song_created':
-        song = Song(id=data['id'], title=data['title'], url=data['url'])
+        song = Song(title=data['title'], url=data['url'])
         db.session.add(song)
         db.session.commit()
         print('Song Added')

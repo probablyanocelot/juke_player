@@ -2,6 +2,7 @@ import urllib.request
 import re
 import os
 import requests
+import json
 from dotenv import load_dotenv
 load_dotenv('.env')
 
@@ -15,7 +16,7 @@ async def yt_query(*terms, api_key=YT_API_KEY):
         "https://www.youtube.com/results?search_query=" + '+'.join(term for term in terms))
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
     url = "https://www.youtube.com/watch?v=" + video_ids[0]
-    title = name_from_id(api_key, video_ids[0])
+    title = title_from_id(video_ids[0])
     return url
 # {
 #         'title': title,
@@ -27,10 +28,14 @@ def url_to_stream(json_data, counter=None):
 
     try:
 
+        # removes link args
         if url.split('&amp;')[0]:
             url = url.split('&amp;')[0]
+
+        # test this to see if better success rate
         url = json_data['url'].replace(r'youtu.be', r'youtube.com/v/')
         url = url.replace(r'watch?v=', 'v/')
+
         stream_url = get_bestquality(url).url
         json_data['url'] = stream_url
         return json_data
@@ -42,20 +47,19 @@ def url_to_stream(json_data, counter=None):
         return json_data
 
 
-def name_from_id(id, api_key=YT_API_KEY):
+def title_from_id(id, api_key=YT_API_KEY):
+    print('GETTING TITLE FROM ID')
     url = requests.get(
-        f'https://www.googleapis.com/youtube/v3/videos?part=snippet&id={id}&key={api_key}').json()
+        f'https://www.googleapis.com/youtube/v3/videos?part=snippet&id={id}&key={api_key}')  # .json()
     # url_json = json.loads(url)
-    title = url['items'][0]['snippet']['title']
+    title = url.json()['items'][0]['snippet']['title']
     return title
-    # title = url_json['entry']['title']['$t']
-    # return title
-    # author = json['entry']['author'][0]['name']
 
 
 # HAVE TO USE API TO GET TITLE
 def get_vid_name(json_data, api_key=YT_API_KEY):
-    print(json_data)
+    print('GETTING VID NAME')
+    print('BEFORE GET NAME:\n', json_data)
     # print(json_data['url'])
     # pattern = r"\??v?=?([^#\&\?]*).*/"
     pattern = '(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
@@ -64,9 +68,10 @@ def get_vid_name(json_data, api_key=YT_API_KEY):
 
         print('IS YOUTUBE LINK')
         id = re.search(pattern, json_data['url']).group(1)
-        json_data['title'] = name_from_id(api_key, id)
+        json_data['title'] = title_from_id(id)
 
-    print(json_data)
+    print('AFTER GET NAME:\n', json_data)
+
     return json_data
 
 
@@ -74,10 +79,9 @@ def get_vid_name(json_data, api_key=YT_API_KEY):
 
     #
 if __name__ == '__main__':
-    print(YT_API_KEY)
     json_data = {'0': {'title': 'asdfjldshkf',
                        'url': 'https://youtu.be/Hldov3JOopU'}}
-    get_vid_name(YT_API_KEY, json_data)
+    get_vid_name(json_data)
 
 
 # def try_title(id):
