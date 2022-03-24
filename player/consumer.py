@@ -30,8 +30,8 @@ def callback(ch, method, properties, body):
         db.session.add(song)
         db.session.commit()
         print('Song Added')
-        requests.get(
-            'http://backend:5000/api/query/song_added/{}'.format(song.id))
+        # requests.get(
+        #     'http://backend:5000/api/query/song_added/{}'.format(song.id))
 
     elif properties.content_type == 'song_updated':
         song = Song.query.get(data['id'])

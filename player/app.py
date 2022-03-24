@@ -1,4 +1,5 @@
 import requests
+import threading
 from dataclasses import dataclass
 from producer import publish
 
@@ -7,11 +8,40 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
 
-app = Flask(__name__)
+
+from jukebot import Player
+
+
+# app = Flask(__name__)
+app = MyFlaskApp(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@db:5432/player'
 CORS(app)
 
 db = SQLAlchemy(app)
+
+
+def start_player():
+    print('MyFlaskApp is starting up!')
+    if len(Song.query.all()) == 0:
+        print('No songs in db')
+        user_input()
+        # req = requests.get('http://localhost:5000/api/songs/')
+        # songs = req.json()
+        # for song in songs:
+        #     print(song)
+        #     db.session.add(Song(song['id'], song['title'], song['url']))
+        #     db.session.commit()
+    Player(Song.query.all())
+
+
+class MyFlaskApp(Flask):
+    def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
+        if not self.debug or os.getenv('WERKZEUG_RUN_MAIN') == 'true':
+            with self.app_context():
+                threading.Thread(target=start_player).start_player()
+        super(MyFlaskApp, self).run(host=host, port=port,
+                                    debug=debug, load_dotenv=load_dotenv, **options)
 
 
 @dataclass
@@ -47,7 +77,7 @@ def get_stream_url(id):
     return jsonify(song)
 
 
-@ app.route('/api/query/<string:user_in>')
+@app.route('/api/query/<string:user_in>')
 def send_query(user_in):
     query = Query(user_in=user_in)
     publish('query', query.serialize())
