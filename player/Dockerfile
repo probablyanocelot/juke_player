@@ -10,5 +10,4 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 COPY . /app
 
-# Run the application:
-CMD python app.py
+# use docker-compose to run the app

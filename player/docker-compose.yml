@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # command: 'python app.py'
+    command: 'python app.py'
     ports:
       - 8001:5000
     volumes:
@@ -12,11 +12,28 @@ services:
     depends_on:
       - db
   
+  rabbitmq:
+    image: rabbitmq
+    volumes:
+      - ./etc/rabbitmq/conf:/etc/rabbitmq/
+      - ./etc/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./etc/rabbitmq/logs/:/var/log/rabbitmq/
+    command: rabbitmq-server
+    expose:
+      - 5672 #amqp
+      - 15672 #http
+    healthcheck:
+        test: [ "CMD", "rabbitmqctl", "status"]
+        interval: 5s
+        timeout: 20s
+        retries: 5
+
+
   queue:
     build:
       context: .
       dockerfile: Dockerfile
-    command: 'python -u consumer.py'
+    command: 'python consumer.py'
     depends_on:
       - db
   

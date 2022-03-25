@@ -6,12 +6,14 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 
 MQ_HOST = os.getenv('MQ_HOST')
+MQ_PORT = os.getenv('MQ_PORT')
+MQ_USER = os.getenv('MQ_USER')
+MQ_PASSWD = os.getenv('MQ_PASSWD')
 
-params = pika.URLParameters(MQ_HOST)
+# params = pika.URLParameters(MQ_HOST)
 
-# params = pika.ConnectionParameters(host=MQ_HOST, port=MQ_PORT, credentials=pika.credentials.PlainCredentials(
-#     MQ_USER, MQ_PASSWD), heartbeat_interval=0)
-# conn = pika.BlockingConnection(parameters=params)
+params = pika.ConnectionParameters(host=MQ_HOST, port=MQ_PORT, credentials=pika.credentials.PlainCredentials(
+    MQ_USER, MQ_PASSWD), heartbeat_interval=0)
 
 connection = pika.BlockingConnection(params)
 

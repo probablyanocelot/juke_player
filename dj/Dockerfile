@@ -21,9 +21,8 @@ RUN pip install -r requirements.txt
 
 #  Add dependency files:
 ADD backend_youtube_dl.py /usr/local/lib/python3.10/site-packages/pafy
-# ADD ffmpeg.exe /usr/local/lib
+# ADD ffmpeg.exe /usr/local/lib ?
 
 COPY . /app
 
-# Run the application:
-CMD python app.py
+# use docker-compose to run the app
