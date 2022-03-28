@@ -1,5 +1,6 @@
 import requests
 import threading
+import asyncio
 from producer import publish
 
 from flask import Flask, jsonify

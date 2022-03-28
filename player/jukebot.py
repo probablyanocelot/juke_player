@@ -7,11 +7,11 @@ import keyboard
 class Player():
     def __init__(self, json_data):
 
-        keyboard.add_hotkey(r'ctrl + alt + 8',
-                            lambda: self.next_song())
-        keyboard.add_hotkey(r'ctrl + alt + 9',
-                            lambda: self.media_player.pause())
-        keyboard.add_hotkey(r'ctrl + alt + 0', lambda: self.next_song())
+        # keyboard.add_hotkey(r'ctrl + alt + 8',
+        #                     lambda: self.next_song())
+        # keyboard.add_hotkey(r'ctrl + alt + 9',
+        #                     lambda: self.media_player.pause())
+        # keyboard.add_hotkey(r'ctrl + alt + 0', lambda: self.next_song())
 
         self.Instance = vlc.Instance()  # "prefer-insecure"
         self.media_player = vlc.MediaListPlayer()

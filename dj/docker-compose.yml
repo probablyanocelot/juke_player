@@ -1,4 +1,4 @@
-version: '4.4.4'
+
 services:
   backend:
     build:
@@ -6,28 +6,34 @@ services:
       dockerfile: Dockerfile
     command: 'python app.py'
     ports:
-      - 8002:5000
+      - 9000:5000
     volumes:
       - .:/app
+    networks:
+      - default
+      - network1
+    external_links:
+      - rabbitmq
     depends_on:
       - db
+
   
 
-  rabbitmq:
-    image: rabbitmq
-    volumes:
-      - ./etc/rabbitmq/conf:/etc/rabbitmq/
-      - ./etc/rabbitmq/data/:/var/lib/rabbitmq/
-      - ./etc/rabbitmq/logs/:/var/log/rabbitmq/
-    command: rabbitmq-server
-    expose:
-      - 5672 #amqp
-      - 15672 #http
-    healthcheck:
-        test: [ "CMD", "rabbitmqctl", "status"]
-        interval: 5s
-        timeout: 20s
-        retries: 5
+  # rabbitmq:
+  #   image: rabbitmq
+  #   volumes:
+  #     - ./etc/rabbitmq/conf:/etc/rabbitmq/
+  #     - ./etc/rabbitmq/data/:/var/lib/rabbitmq/
+  #     - ./etc/rabbitmq/logs/:/var/log/rabbitmq/
+  #   command: rabbitmq-server
+  #   expose:
+  #     - 5672 #amqp
+  #     - 15672 #http
+  #   healthcheck:
+  #       test: [ "CMD", "rabbitmqctl", "status"]
+  #       interval: 5s
+  #       timeout: 20s
+  #       retries: 5
           
 
   queue:
@@ -35,8 +41,15 @@ services:
       context: .
       dockerfile: Dockerfile
     command: 'python consumer.py'
+    networks:
+      - default
+      - network1
+    external_links:
+      - rabbitmq
+
     depends_on:
-      - db, backend, rabbitmq
+      - backend
+      - db
   
   db:
     image: postgres:14.1
@@ -50,3 +63,8 @@ services:
       - .dbdata:/var/lib/postgres/data\
     ports:
       - 33068:5432
+
+
+networks:
+  network1:
+    external: true

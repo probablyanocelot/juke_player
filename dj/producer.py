@@ -5,8 +5,19 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 
 MQ_HOST = os.getenv('MQ_HOST')
-# connection_params = pika.ConnectionParameters(heartbeat=10)
-params = pika.URLParameters(MQ_HOST)
+MQ_PORT = os.getenv('MQ_PORT')
+MQ_USER = os.getenv('MQ_USER')
+MQ_PASSWD = os.getenv('MQ_PASSWD')
+
+# params = pika.URLParameters(MQ_HOST)
+
+# params = pika.ConnectionParameters(host='rabbitmq', credentials=pika.credentials.PlainCredentials(
+#     MQ_USER, MQ_PASSWD), heartbeat=10)
+# params = pika.ConnectionParameters("localhost", heartbeat=10)
+
+# params = pika.URLParameters('amqp://guest:guest@rabbitmq:5672')
+params = pika.URLParameters(
+    'amqp://myuser:mypassword@rabbitmq:5672?heartbeat=600&blocked_connection_timeout=300')
 
 connection = pika.BlockingConnection(params)
 
