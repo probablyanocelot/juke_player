@@ -14,7 +14,7 @@ MQ_PASSWD = os.getenv('MQ_PASSWD')
 # params = pika.ConnectionParameters(host=MQ_HOST, port=MQ_PORT, credentials=pika.credentials.PlainCredentials(
 #     MQ_USER, MQ_PASSWD), heartbeat=10)
 params = pika.URLParameters(
-    'amqp://myuser:mypassword@rabbitmq:5672?heartbeat=600&blocked_connection_timeout=300')
+    'amqp://myuser:mypassword@rabbitmq:5672?heartbeat=0&blocked_connection_timeout=0')
 
 connection = pika.BlockingConnection(params)
 

@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: 'python app.py'
+    restart: on-failure
     ports:
       - 9001:5000
     volumes:
@@ -55,10 +56,10 @@ services:
       context: .
       dockerfile: Dockerfile
     command: 'python consumer.py'
+    restart: on-failure
     networks:
       - default
       - network1
-    restart: on-failure
     external_links:
       - rabbitmq
     depends_on:
