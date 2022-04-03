@@ -84,6 +84,8 @@ def start_player():
         #     db.session.add(Song(song['id'], song['title'], song['url']))
         #     db.session.commit()
         Player(Song.query.all())
+    else:
+        Player(Song.query.all())
 
 
 def user_input():

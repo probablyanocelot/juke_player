@@ -47,13 +47,16 @@ def url_to_stream(json_data, counter=None):
         return json_data
 
 
-def title_from_id(id, api_key=YT_API_KEY):
+def title_from_id(title, id, api_key=YT_API_KEY):
     print('GETTING TITLE FROM ID')
     url = requests.get(
         f'https://www.googleapis.com/youtube/v3/videos?part=snippet&id={id}&key={api_key}')  # .json()
     # url_json = json.loads(url)
-    title = url.json()['items'][0]['snippet']['title']
-    return title
+    try:
+        new_title = url.json()['items'][0]['snippet']['title']
+        return new_title
+    except:
+        return title
 
 
 # HAVE TO USE API TO GET TITLE
@@ -68,7 +71,7 @@ def get_vid_name(json_data, api_key=YT_API_KEY):
 
         print('IS YOUTUBE LINK')
         id = re.search(pattern, json_data['url']).group(1)
-        json_data['title'] = title_from_id(id)
+        json_data['title'] = title_from_id(json_data['title'], id)
 
     print('AFTER GET NAME:\n', json_data)
 
