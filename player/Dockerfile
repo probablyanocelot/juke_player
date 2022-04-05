@@ -1,3 +1,10 @@
+FROM ubuntu
+RUN apt-get install -y vlc
+
+RUN useradd -m vlcuser
+
+
+
 FROM library/postgres
 ENV POSTGRES_USER test
 ENV POSTGRES_PASSWORD test
