@@ -94,5 +94,11 @@ def publish_songs(cmd, terms):
     return jsonify(playlist)
 
 
+@app.route('/api/stream/songs/<int:id>/stream')
+def get_stream(id):
+    Song.query.get(id)
+    return jsonify(url_to_stream(url))
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

@@ -53,21 +53,29 @@ def callback(ch, method, properties, body):
             #     publish('song_created', song.serialize())
             #     print('Song Added!')
 
-    elif properties.content_type == 'song_created':
+    elif properties.content_type == 'get_stream_url':
         song = Song(title=data['title'], url=data['url'])
+        db.session.add(song)
+        db.session.commit()
+        print("Song Added")
+        url = requests.get('http://backend:5000/api/songs/{}/stream'.format(song.id)
+        print("Stream URL Generated")
+
+    elif properties.content_type == 'song_created':
+        song=Song(title=data['title'], url=data['url'])
         db.session.add(song)
         db.session.commit()
         print("Song Created")
 
     elif properties.content_type == 'song_updated':
-        song = Song.query.get(data['id'])
-        song.title = data['title']
-        song.url = data['url']
+        song=Song.query.get(data['id'])
+        song.title=data['title']
+        song.url=data['url']
         db.session.commit()
         print('Song Updated')
 
     elif properties.content_type == 'song_deleted':
-        song = Song.query.get(data)
+        song=Song.query.get(data)
         db.session.delete(song)
         db.session.commit()
         print('Song Deleted')

@@ -59,8 +59,8 @@ def index():
 @app.route('/api/songs/<int:id>/stream')
 def get_stream_url(id):
     song = Song.query.get(id)
-    song.url = url_to_stream(song.url)
-    # publish('song_updated', song.serialize())
+    # song.url = url_to_stream(song.url)
+    publish('get_stream_url', song.serialize())
     return jsonify(song)
 
 

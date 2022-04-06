@@ -3,6 +3,7 @@ import re
 import os
 import requests
 import json
+import pafy
 from dotenv import load_dotenv
 load_dotenv('.env')
 
@@ -30,11 +31,12 @@ def get_bestquality(url, watch=False):
         best = video.getbest()
     else:
         best = video.getbestaudio()
-    return best
+    return best.url
 
 
 def url_to_stream(json_data, counter=None):
 
+    url = json_data
     try:
 
         # removes link args
@@ -45,7 +47,7 @@ def url_to_stream(json_data, counter=None):
         url = json_data['url'].replace(r'youtu.be', r'youtube.com/v/')
         url = url.replace(r'watch?v=', 'v/')
 
-        stream_url = get_bestquality(url).url
+        stream_url = get_bestquality(url)
         json_data['url'] = stream_url
         return json_data
 
