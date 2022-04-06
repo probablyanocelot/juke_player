@@ -24,6 +24,15 @@ async def yt_query(*terms, api_key=YT_API_KEY):
 #     }
 
 
+def get_bestquality(url, watch=False):
+    video = pafy.new(url)
+    if watch:
+        best = video.getbest()
+    else:
+        best = video.getbestaudio()
+    return best
+
+
 def url_to_stream(json_data, counter=None):
 
     try:
